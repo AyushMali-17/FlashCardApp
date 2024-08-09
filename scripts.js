@@ -26,6 +26,11 @@ const themeSelect = document.getElementById('themeSelect');
 const fontSize = document.getElementById('fontSize');
 const fontSizeValue = document.getElementById('fontSizeValue');
 const applySettingsButton = document.getElementById('applySettingsButton');
+const darkModeButton = document.createElement('button');
+
+darkModeButton.textContent = 'Toggle Dark Mode';
+darkModeButton.className = 'dark-mode-button';
+document.body.appendChild(darkModeButton);
 
 let cards = JSON.parse(localStorage.getItem('cards')) || [];
 let currentCardIndex = 0;
@@ -112,6 +117,7 @@ function searchCards() {
 }
 
 function updateCardList() {
+    const cardList = document.getElementById('cardList');
     cardList.innerHTML = '';
     cards.forEach((card, index) => {
         const listItem = document.createElement('li');
@@ -142,6 +148,10 @@ function applySettings() {
     fontSizeValue.textContent = `${fontSize.value}px`;
 }
 
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+}
+
 flipButton.addEventListener('click', flipCard);
 nextButton.addEventListener('click', nextCard);
 prevButton.addEventListener('click', prevCard);
@@ -151,8 +161,9 @@ editCardButton.addEventListener('click', editCard);
 saveEditButton.addEventListener('click', saveEdit);
 shuffleButton.addEventListener('click', shuffleCards);
 searchButton.addEventListener('click', searchCards);
-submitFeedbackButton.addEventListener('click', submitFeedback);
-applySettingsButton.addEventListener('click', applySettings);
+feedbackButton.addEventListener('click', () => feedbackModal.style.display = 'block');
+settingsButton.addEventListener('click', () => settingsModal.style.display = 'block');
+darkModeButton.addEventListener('click', toggleDarkMode);
 
 document.querySelectorAll('.modal .close').forEach(el => {
     el.addEventListener('click', (e) => {
