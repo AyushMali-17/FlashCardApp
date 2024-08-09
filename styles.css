@@ -135,10 +135,6 @@ button:active {
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.modal-content {
-    background-color: #fefefe;
-}
-
 body.dark-mode .modal-content {
     background-color: #444;
     color: #f0f0f0;

@@ -5,175 +5,153 @@ const prevButton = document.getElementById('prevButton');
 const addCardButton = document.getElementById('addCardButton');
 const clearCardsButton = document.getElementById('clearCardsButton');
 const editCardButton = document.getElementById('editCardButton');
-const saveEditButton = document.getElementById('saveEditButton');
 const shuffleButton = document.getElementById('shuffleButton');
 const searchButton = document.getElementById('searchButton');
 const feedbackButton = document.getElementById('feedbackButton');
 const settingsButton = document.getElementById('settingsButton');
-
 const editCardModal = document.getElementById('editCardModal');
 const searchModal = document.getElementById('searchModal');
 const feedbackModal = document.getElementById('feedbackModal');
 const settingsModal = document.getElementById('settingsModal');
-
-const editQuestion = document.getElementById('editQuestion');
-const editAnswer = document.getElementById('editAnswer');
+const closeEditCardModal = editCardModal.querySelector('.close');
+const closeSearchModal = searchModal.querySelector('.close');
+const closeFeedbackModal = feedbackModal.querySelector('.close');
+const closeSettingsModal = settingsModal.querySelector('.close');
+const saveEditButton = document.getElementById('saveEditButton');
 const searchQuery = document.getElementById('searchQuery');
 const searchResults = document.getElementById('searchResults');
+const submitFeedbackButton = document.getElementById('submitFeedbackButton');
 const feedbackText = document.getElementById('feedbackText');
 const feedbackStatus = document.getElementById('feedbackStatus');
-const themeSelect = document.getElementById('themeSelect');
-const fontSize = document.getElementById('fontSize');
-const fontSizeValue = document.getElementById('fontSizeValue');
 const applySettingsButton = document.getElementById('applySettingsButton');
-const darkModeButton = document.createElement('button');
+const themeSelect = document.getElementById('themeSelect');
+const fontSizeRange = document.getElementById('fontSize');
+const fontSizeValue = document.getElementById('fontSizeValue');
 
-darkModeButton.textContent = 'Toggle Dark Mode';
-darkModeButton.className = 'dark-mode-button';
-document.body.appendChild(darkModeButton);
+let cards = []; // Store cards in an array
+let currentIndex = 0;
 
-let cards = JSON.parse(localStorage.getItem('cards')) || [];
-let currentCardIndex = 0;
-
-function displayCard(index) {
-    if (cards.length === 0) return;
-    flashcard.querySelector('.front').textContent = cards[index].question;
-    flashcard.querySelector('.back').textContent = cards[index].answer;
-}
-
-function flipCard() {
+// Add event listeners
+flipButton.addEventListener('click', () => {
     flashcard.classList.toggle('flip');
-}
+});
 
-function nextCard() {
-    currentCardIndex = (currentCardIndex + 1) % cards.length;
-    displayCard(currentCardIndex);
-    flashcard.classList.remove('flip');
-}
+nextButton.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % cards.length;
+    updateFlashcard();
+});
 
-function prevCard() {
-    currentCardIndex = (currentCardIndex - 1 + cards.length) % cards.length;
-    displayCard(currentCardIndex);
-    flashcard.classList.remove('flip');
-}
+prevButton.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+    updateFlashcard();
+});
 
-function addCard() {
+addCardButton.addEventListener('click', () => {
     const question = prompt('Enter the question:');
     const answer = prompt('Enter the answer:');
     if (question && answer) {
         cards.push({ question, answer });
         updateCardList();
-        saveCards();
-        if (cards.length === 1) displayCard(0);
     }
-}
+});
 
-function clearCards() {
+clearCardsButton.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear all cards?')) {
         cards = [];
         updateCardList();
-        saveCards();
-        flashcard.querySelector('.front').textContent = 'Question?';
-        flashcard.querySelector('.back').textContent = 'Answer';
     }
-}
+});
 
-function editCard() {
-    if (cards.length === 0) return;
-    editQuestion.value = cards[currentCardIndex].question;
-    editAnswer.value = cards[currentCardIndex].answer;
+editCardButton.addEventListener('click', () => {
     editCardModal.style.display = 'block';
-}
+});
 
-function saveEdit() {
-    cards[currentCardIndex].question = editQuestion.value;
-    cards[currentCardIndex].answer = editAnswer.value;
-    updateCardList();
-    saveCards();
-    editCardModal.style.display = 'none';
-}
-
-function shuffleCards() {
-    for (let i = cards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
+saveEditButton.addEventListener('click', () => {
+    const question = document.getElementById('editQuestion').value;
+    const answer = document.getElementById('editAnswer').value;
+    if (question && answer) {
+        cards[currentIndex] = { question, answer };
+        updateFlashcard();
+        updateCardList();
+        editCardModal.style.display = 'none';
     }
-    updateCardList();
-    displayCard(currentCardIndex);
-    flashcard.classList.remove('flip');
-}
+});
 
-function searchCards() {
+shuffleButton.addEventListener('click', () => {
+    cards.sort(() => Math.random() - 0.5);
+    updateCardList();
+});
+
+searchButton.addEventListener('click', () => {
     const query = searchQuery.value.toLowerCase();
-    searchResults.innerHTML = '';
-    cards.forEach(card => {
-        if (card.question.toLowerCase().includes(query) || card.answer.toLowerCase().includes(query)) {
-            const resultItem = document.createElement('li');
-            resultItem.textContent = `Q: ${card.question} | A: ${card.answer}`;
-            searchResults.appendChild(resultItem);
-        }
-    });
+    const results = cards.filter(card => card.question.toLowerCase().includes(query) || card.answer.toLowerCase().includes(query));
+    displaySearchResults(results);
     searchModal.style.display = 'block';
+});
+
+submitFeedbackButton.addEventListener('click', () => {
+    const feedback = feedbackText.value;
+    if (feedback) {
+        feedbackStatus.textContent = 'Feedback submitted successfully!';
+        feedbackText.value = '';
+    }
+});
+
+settingsButton.addEventListener('click', () => {
+    settingsModal.style.display = 'block';
+});
+
+applySettingsButton.addEventListener('click', () => {
+    const theme = themeSelect.value;
+    document.body.className = theme === 'dark' ? 'dark-mode' : '';
+    document.body.style.fontSize = `${fontSizeRange.value}px`;
+    fontSizeValue.textContent = `${fontSizeRange.value}px`;
+    settingsModal.style.display = 'none';
+});
+
+fontSizeRange.addEventListener('input', () => {
+    fontSizeValue.textContent = `${fontSizeRange.value}px`;
+});
+
+// Modal close functionality
+closeEditCardModal.addEventListener('click', () => {
+    editCardModal.style.display = 'none';
+});
+
+closeSearchModal.addEventListener('click', () => {
+    searchModal.style.display = 'none';
+});
+
+closeFeedbackModal.addEventListener('click', () => {
+    feedbackModal.style.display = 'none';
+});
+
+closeSettingsModal.addEventListener('click', () => {
+    settingsModal.style.display = 'none';
+});
+
+// Utility functions
+function updateFlashcard() {
+    const card = cards[currentIndex];
+    flashcard.querySelector('.front').textContent = card.question;
+    flashcard.querySelector('.back').textContent = card.answer;
 }
 
 function updateCardList() {
     const cardList = document.getElementById('cardList');
     cardList.innerHTML = '';
     cards.forEach((card, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `Q: ${card.question} | A: ${card.answer}`;
-        cardList.appendChild(listItem);
+        const li = document.createElement('li');
+        li.textContent = `${card.question} - ${card.answer}`;
+        cardList.appendChild(li);
     });
 }
 
-function saveCards() {
-    localStorage.setItem('cards', JSON.stringify(cards));
-}
-
-function submitFeedback() {
-    const feedback = feedbackText.value;
-    if (feedback.trim()) {
-        feedbackStatus.textContent = 'Feedback submitted successfully!';
-        feedbackStatus.style.color = 'green';
-        feedbackText.value = '';
-    } else {
-        feedbackStatus.textContent = 'Feedback cannot be empty.';
-        feedbackStatus.style.color = 'red';
-    }
-}
-
-function applySettings() {
-    document.body.className = themeSelect.value;
-    document.documentElement.style.fontSize = `${fontSize.value}px`;
-    fontSizeValue.textContent = `${fontSize.value}px`;
-}
-
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-}
-
-flipButton.addEventListener('click', flipCard);
-nextButton.addEventListener('click', nextCard);
-prevButton.addEventListener('click', prevCard);
-addCardButton.addEventListener('click', addCard);
-clearCardsButton.addEventListener('click', clearCards);
-editCardButton.addEventListener('click', editCard);
-saveEditButton.addEventListener('click', saveEdit);
-shuffleButton.addEventListener('click', shuffleCards);
-searchButton.addEventListener('click', searchCards);
-feedbackButton.addEventListener('click', () => feedbackModal.style.display = 'block');
-settingsButton.addEventListener('click', () => settingsModal.style.display = 'block');
-darkModeButton.addEventListener('click', toggleDarkMode);
-
-document.querySelectorAll('.modal .close').forEach(el => {
-    el.addEventListener('click', (e) => {
-        e.target.closest('.modal').style.display = 'none';
+function displaySearchResults(results) {
+    searchResults.innerHTML = '';
+    results.forEach(card => {
+        const li = document.createElement('li');
+        li.textContent = `${card.question} - ${card.answer}`;
+        searchResults.appendChild(li);
     });
-});
-
-window.onload = () => {
-    if (cards.length) {
-        displayCard(currentCardIndex);
-        updateCardList();
-    }
-};
+}
