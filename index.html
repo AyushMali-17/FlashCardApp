@@ -13,10 +13,27 @@
             <div class="front">Question?</div>
             <div class="back">Answer</div>
         </div>
-        <button id="flipButton">Flip Card</button>
-        <button id="nextButton">Next Card</button>
         <div class="controls">
+            <button id="flipButton">Flip Card</button>
+            <button id="nextButton">Next Card</button>
+            <button id="prevButton">Previous Card</button>
             <button id="addCardButton">Add Card</button>
+            <button id="clearCardsButton">Clear Cards</button>
+            <button id="editCardButton">Edit Card</button>
+            <button id="shuffleButton">Shuffle Cards</button>
+        </div>
+        <div class="card-list">
+            <h2>Card List</h2>
+            <ul id="cardList"></ul>
+        </div>
+    </div>
+    <div id="editCardModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Card</h2>
+            <input type="text" id="editQuestion" placeholder="Edit Question">
+            <input type="text" id="editAnswer" placeholder="Edit Answer">
+            <button id="saveEditButton">Save Changes</button>
         </div>
     </div>
     <script src="scripts.js"></script>
