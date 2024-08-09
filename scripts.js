@@ -5,37 +5,35 @@ const prevButton = document.getElementById('prevButton');
 const addCardButton = document.getElementById('addCardButton');
 const clearCardsButton = document.getElementById('clearCardsButton');
 const editCardButton = document.getElementById('editCardButton');
+const saveEditButton = document.getElementById('saveEditButton');
 const shuffleButton = document.getElementById('shuffleButton');
 const searchButton = document.getElementById('searchButton');
-const cardList = document.getElementById('cardList');
-const searchModal = document.getElementById('searchModal');
-const closeSearchModal = document.querySelector('.modal .close-search');
-const searchQuery = document.getElementById('searchQuery');
-const searchResults = document.getElementById('searchResults');
-const feedbackModal = document.getElementById('feedbackModal');
-const closeFeedbackModal = document.querySelector('.modal .close-feedback');
-const feedbackText = document.getElementById('feedbackText');
-const submitFeedbackButton = document.getElementById('submitFeedbackButton');
-const feedbackStatus = document.getElementById('feedbackStatus');
+const feedbackButton = document.getElementById('feedbackButton');
+const settingsButton = document.getElementById('settingsButton');
 
 const editCardModal = document.getElementById('editCardModal');
-const closeEditCardModal = document.querySelector('.modal .close');
+const searchModal = document.getElementById('searchModal');
+const feedbackModal = document.getElementById('feedbackModal');
+const settingsModal = document.getElementById('settingsModal');
+
 const editQuestion = document.getElementById('editQuestion');
 const editAnswer = document.getElementById('editAnswer');
-const saveEditButton = document.getElementById('saveEditButton');
+const searchQuery = document.getElementById('searchQuery');
+const searchResults = document.getElementById('searchResults');
+const feedbackText = document.getElementById('feedbackText');
+const feedbackStatus = document.getElementById('feedbackStatus');
+const themeSelect = document.getElementById('themeSelect');
+const fontSize = document.getElementById('fontSize');
+const fontSizeValue = document.getElementById('fontSizeValue');
+const applySettingsButton = document.getElementById('applySettingsButton');
 
-let cards = JSON.parse(localStorage.getItem('cards')) || [
-    { question: 'What is HTML?', answer: 'HyperText Markup Language' },
-    { question: 'What is CSS?', answer: 'Cascading Style Sheets' },
-    { question: 'What is JavaScript?', answer: 'A programming language for the web' },
-];
-
+let cards = JSON.parse(localStorage.getItem('cards')) || [];
 let currentCardIndex = 0;
 
 function displayCard(index) {
-    const card = cards[index];
-    flashcard.querySelector('.front').textContent = card.question;
-    flashcard.querySelector('.back').textContent = card.answer;
+    if (cards.length === 0) return;
+    flashcard.querySelector('.front').textContent = cards[index].question;
+    flashcard.querySelector('.back').textContent = cards[index].answer;
 }
 
 function flipCard() {
@@ -61,6 +59,7 @@ function addCard() {
         cards.push({ question, answer });
         updateCardList();
         saveCards();
+        if (cards.length === 1) displayCard(0);
     }
 }
 
@@ -69,11 +68,13 @@ function clearCards() {
         cards = [];
         updateCardList();
         saveCards();
-        displayCard(0);
+        flashcard.querySelector('.front').textContent = 'Question?';
+        flashcard.querySelector('.back').textContent = 'Answer';
     }
 }
 
 function editCard() {
+    if (cards.length === 0) return;
     editQuestion.value = cards[currentCardIndex].question;
     editAnswer.value = cards[currentCardIndex].answer;
     editCardModal.style.display = 'block';
@@ -135,6 +136,12 @@ function submitFeedback() {
     }
 }
 
+function applySettings() {
+    document.body.className = themeSelect.value;
+    document.documentElement.style.fontSize = `${fontSize.value}px`;
+    fontSizeValue.textContent = `${fontSize.value}px`;
+}
+
 flipButton.addEventListener('click', flipCard);
 nextButton.addEventListener('click', nextCard);
 prevButton.addEventListener('click', prevCard);
@@ -145,17 +152,12 @@ saveEditButton.addEventListener('click', saveEdit);
 shuffleButton.addEventListener('click', shuffleCards);
 searchButton.addEventListener('click', searchCards);
 submitFeedbackButton.addEventListener('click', submitFeedback);
+applySettingsButton.addEventListener('click', applySettings);
 
-closeEditCardModal.addEventListener('click', () => {
-    editCardModal.style.display = 'none';
-});
-
-closeSearchModal.addEventListener('click', () => {
-    searchModal.style.display = 'none';
-});
-
-closeFeedbackModal.addEventListener('click', () => {
-    feedbackModal.style.display = 'none';
+document.querySelectorAll('.modal .close').forEach(el => {
+    el.addEventListener('click', (e) => {
+        e.target.closest('.modal').style.display = 'none';
+    });
 });
 
 window.onload = () => {

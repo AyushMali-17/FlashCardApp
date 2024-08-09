@@ -22,6 +22,8 @@
             <button id="editCardButton">Edit Card</button>
             <button id="shuffleButton">Shuffle Cards</button>
             <button id="searchButton">Search Cards</button>
+            <button id="feedbackButton">Feedback</button>
+            <button id="settingsButton">Settings</button>
         </div>
         <div class="card-list">
             <h2>Card List</h2>
@@ -38,7 +40,7 @@
         </div>
         <div id="searchModal" class="modal">
             <div class="modal-content">
-                <span class="close-search">&times;</span>
+                <span class="close">&times;</span>
                 <h2>Search Cards</h2>
                 <input type="text" id="searchQuery" placeholder="Search for a card...">
                 <button id="searchButton">Search</button>
@@ -47,11 +49,26 @@
         </div>
         <div id="feedbackModal" class="modal">
             <div class="modal-content">
-                <span class="close-feedback">&times;</span>
+                <span class="close">&times;</span>
                 <h2>Feedback</h2>
                 <textarea id="feedbackText" placeholder="Enter your feedback here..."></textarea>
                 <button id="submitFeedbackButton">Submit Feedback</button>
                 <p id="feedbackStatus"></p>
+            </div>
+        </div>
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Settings</h2>
+                <label for="themeSelect">Choose Theme:</label>
+                <select id="themeSelect">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                </select>
+                <label for="fontSize">Font Size:</label>
+                <input type="range" id="fontSize" min="12" max="36" value="16">
+                <span id="fontSizeValue">16px</span>
+                <button id="applySettingsButton">Apply</button>
             </div>
         </div>
     </div>

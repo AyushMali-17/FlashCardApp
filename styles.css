@@ -1,15 +1,23 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
     margin: 0;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #333;
+    color: #f0f0f0;
 }
 
 .container {
     text-align: center;
+    max-width: 800px;
+    margin: auto;
 }
 
 .flashcard {
@@ -34,11 +42,7 @@ body {
     font-size: 1.5em;
     color: #333;
     border-radius: 8px;
-    transition: transform 0.6s;
-}
-
-.flashcard .back {
-    transform: rotateY(180deg);
+    transition: transform 0.6s, box-shadow 0.6s;
 }
 
 .flashcard.flip .front {
@@ -47,6 +51,19 @@ body {
 
 .flashcard.flip .back {
     transform: rotateY(0deg);
+}
+
+.flashcard:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.flashcard .back {
+    background: #f9f9f9;
+    transform: rotateY(180deg);
+}
+
+.flashcard.flip .back {
+    background: #fff;
 }
 
 button {
@@ -58,7 +75,7 @@ button {
     color: white;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 button:focus {
@@ -67,6 +84,11 @@ button:focus {
 
 button:hover {
     background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
 }
 
 .card-list {
@@ -79,8 +101,14 @@ button:hover {
 }
 
 .card-list li {
-    padding: 5px;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.card-list li:hover {
+    background-color: #007bff;
+    color: #fff;
 }
 
 .modal {
@@ -92,48 +120,60 @@ button:hover {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
+    background-color: #fff;
+    margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
     max-width: 500px;
     border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.close,
-.close-search,
-.close-feedback {
+.modal-content {
+    background-color: #fefefe;
+}
+
+body.dark-mode .modal-content {
+    background-color: #444;
+    color: #f0f0f0;
+}
+
+.close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
 }
 
-.close:hover,
-.close:focus,
-.close-search:hover,
-.close-search:focus,
-.close-feedback:hover,
-.close-feedback:focus {
-    color: black;
+.close:hover {
+    color: #000;
     text-decoration: none;
     cursor: pointer;
 }
 
 input,
-textarea {
+textarea,
+select {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
 textarea {
@@ -147,11 +187,38 @@ textarea {
 }
 
 #searchResults li {
-    padding: 5px;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
 #feedbackStatus {
     margin-top: 10px;
     color: green;
+}
+
+#fontSizeValue {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.dark-mode-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.dark-mode-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.dark-mode-button:active {
+    transform: scale(0.95);
 }
