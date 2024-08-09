@@ -21,19 +21,38 @@
             <button id="clearCardsButton">Clear Cards</button>
             <button id="editCardButton">Edit Card</button>
             <button id="shuffleButton">Shuffle Cards</button>
+            <button id="searchButton">Search Cards</button>
         </div>
         <div class="card-list">
             <h2>Card List</h2>
             <ul id="cardList"></ul>
         </div>
-    </div>
-    <div id="editCardModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Edit Card</h2>
-            <input type="text" id="editQuestion" placeholder="Edit Question">
-            <input type="text" id="editAnswer" placeholder="Edit Answer">
-            <button id="saveEditButton">Save Changes</button>
+        <div id="editCardModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Edit Card</h2>
+                <input type="text" id="editQuestion" placeholder="Edit Question">
+                <input type="text" id="editAnswer" placeholder="Edit Answer">
+                <button id="saveEditButton">Save Changes</button>
+            </div>
+        </div>
+        <div id="searchModal" class="modal">
+            <div class="modal-content">
+                <span class="close-search">&times;</span>
+                <h2>Search Cards</h2>
+                <input type="text" id="searchQuery" placeholder="Search for a card...">
+                <button id="searchButton">Search</button>
+                <ul id="searchResults"></ul>
+            </div>
+        </div>
+        <div id="feedbackModal" class="modal">
+            <div class="modal-content">
+                <span class="close-feedback">&times;</span>
+                <h2>Feedback</h2>
+                <textarea id="feedbackText" placeholder="Enter your feedback here..."></textarea>
+                <button id="submitFeedbackButton">Submit Feedback</button>
+                <p id="feedbackStatus"></p>
+            </div>
         </div>
     </div>
     <script src="scripts.js"></script>

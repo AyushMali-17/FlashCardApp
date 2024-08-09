@@ -6,10 +6,20 @@ const addCardButton = document.getElementById('addCardButton');
 const clearCardsButton = document.getElementById('clearCardsButton');
 const editCardButton = document.getElementById('editCardButton');
 const shuffleButton = document.getElementById('shuffleButton');
+const searchButton = document.getElementById('searchButton');
 const cardList = document.getElementById('cardList');
+const searchModal = document.getElementById('searchModal');
+const closeSearchModal = document.querySelector('.modal .close-search');
+const searchQuery = document.getElementById('searchQuery');
+const searchResults = document.getElementById('searchResults');
+const feedbackModal = document.getElementById('feedbackModal');
+const closeFeedbackModal = document.querySelector('.modal .close-feedback');
+const feedbackText = document.getElementById('feedbackText');
+const submitFeedbackButton = document.getElementById('submitFeedbackButton');
+const feedbackStatus = document.getElementById('feedbackStatus');
 
 const editCardModal = document.getElementById('editCardModal');
-const closeModal = document.querySelector('.modal .close');
+const closeEditCardModal = document.querySelector('.modal .close');
 const editQuestion = document.getElementById('editQuestion');
 const editAnswer = document.getElementById('editAnswer');
 const saveEditButton = document.getElementById('saveEditButton');
@@ -70,13 +80,11 @@ function editCard() {
 }
 
 function saveEdit() {
-    if (editQuestion.value && editAnswer.value) {
-        cards[currentCardIndex] = { question: editQuestion.value, answer: editAnswer.value };
-        updateCardList();
-        saveCards();
-        displayCard(currentCardIndex);
-        editCardModal.style.display = 'none';
-    }
+    cards[currentCardIndex].question = editQuestion.value;
+    cards[currentCardIndex].answer = editAnswer.value;
+    updateCardList();
+    saveCards();
+    editCardModal.style.display = 'none';
 }
 
 function shuffleCards() {
@@ -85,20 +93,46 @@ function shuffleCards() {
         [cards[i], cards[j]] = [cards[j], cards[i]];
     }
     updateCardList();
-    saveCards();
+    displayCard(currentCardIndex);
+    flashcard.classList.remove('flip');
+}
+
+function searchCards() {
+    const query = searchQuery.value.toLowerCase();
+    searchResults.innerHTML = '';
+    cards.forEach(card => {
+        if (card.question.toLowerCase().includes(query) || card.answer.toLowerCase().includes(query)) {
+            const resultItem = document.createElement('li');
+            resultItem.textContent = `Q: ${card.question} | A: ${card.answer}`;
+            searchResults.appendChild(resultItem);
+        }
+    });
+    searchModal.style.display = 'block';
 }
 
 function updateCardList() {
     cardList.innerHTML = '';
     cards.forEach((card, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${index + 1}: ${card.question}`;
-        cardList.appendChild(li);
+        const listItem = document.createElement('li');
+        listItem.textContent = `Q: ${card.question} | A: ${card.answer}`;
+        cardList.appendChild(listItem);
     });
 }
 
 function saveCards() {
     localStorage.setItem('cards', JSON.stringify(cards));
+}
+
+function submitFeedback() {
+    const feedback = feedbackText.value;
+    if (feedback.trim()) {
+        feedbackStatus.textContent = 'Feedback submitted successfully!';
+        feedbackStatus.style.color = 'green';
+        feedbackText.value = '';
+    } else {
+        feedbackStatus.textContent = 'Feedback cannot be empty.';
+        feedbackStatus.style.color = 'red';
+    }
 }
 
 flipButton.addEventListener('click', flipCard);
@@ -109,16 +143,24 @@ clearCardsButton.addEventListener('click', clearCards);
 editCardButton.addEventListener('click', editCard);
 saveEditButton.addEventListener('click', saveEdit);
 shuffleButton.addEventListener('click', shuffleCards);
+searchButton.addEventListener('click', searchCards);
+submitFeedbackButton.addEventListener('click', submitFeedback);
 
-closeModal.addEventListener('click', () => {
+closeEditCardModal.addEventListener('click', () => {
     editCardModal.style.display = 'none';
 });
 
-window.onclick = (event) => {
-    if (event.target === editCardModal) {
-        editCardModal.style.display = 'none';
+closeSearchModal.addEventListener('click', () => {
+    searchModal.style.display = 'none';
+});
+
+closeFeedbackModal.addEventListener('click', () => {
+    feedbackModal.style.display = 'none';
+});
+
+window.onload = () => {
+    if (cards.length) {
+        displayCard(currentCardIndex);
+        updateCardList();
     }
 };
-
-displayCard(currentCardIndex);
-updateCardList();
